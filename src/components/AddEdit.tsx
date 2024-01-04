@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { User } from "../models/studennt.model";
-import { useAddUserMutation } from "../features/userDetailApi";
+import { useAddUserMutation, useGetUsersQuery } from "../features/userDetailApi";
 import { useNavigate } from "react-router-dom";
 
 const AddEdit = () => {
     const navigate = useNavigate()
     const [users, setUsers] = useState<User>(Object);
     const [addUser] = useAddUserMutation();
+    const { refetch } = useGetUsersQuery();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsers({ ...users, [e.target.name]: e.target.value });
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         addUser(users)
-        navigate("/");
+        refetch();
+        await navigate("/");
         // console.log(users);
 
     }
@@ -23,7 +25,7 @@ const AddEdit = () => {
 
     return (
         <>
-            {/* <div className="mt-20"></div> */}
+            <div className="mt-40"></div>
             <div className="min-w-lg  h-screen  flex justify-center items-center  ">
                 <form onSubmit={handleSubmit} className="bg-slate-300 w-1/4 shadow-md rounded px-8 pt-6 pb-8 mb-4" >
                     <div className="mb-4">
