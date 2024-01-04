@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { User } from "../models/studennt.model";
-import { useAddUserMutation, useGetUsersQuery, useEditUserQuery } from "../features/userDetailApi";
+import { useAddUserMutation, useGetUsersQuery, useEditUserQuery, useUpdateUserMutation } from "../features/userDetailApi";
 import { useNavigate, useParams } from "react-router-dom";
 
 const AddEdit = () => {
@@ -8,9 +8,10 @@ const AddEdit = () => {
     const [users, setUsers] = useState<User>(Object);
     const [editMode, setEditMode] = useState<boolean>(false);
     const [addUser] = useAddUserMutation();
-    const { refetch } = useGetUsersQuery();
+    // const { refetch } = useGetUsersQuery();
     const { id } = useParams();
     const { data } = useEditUserQuery(id!);
+    const [updateUsers] = useUpdateUserMutation();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsers({ ...users, [e.target.name]: e.target.value });
@@ -19,10 +20,15 @@ const AddEdit = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        addUser(users)
-        await navigate("/");
-        refetch();
-        // console.log(users);
+
+        if (editMode) {
+            await updateUsers(users);
+        } else {
+            await addUser(users);
+        }
+        navigate("/");
+
+        setEditMode(false);
     }
     useEffect(() => {
         if (id && data) {
@@ -35,8 +41,11 @@ const AddEdit = () => {
 
     return (
         <>
-            <div className="mt-5"></div>
-            <div className="min-w-lg  h-screen  flex justify-center items-center  ">
+
+            <div className="min-w-lg  h-screen  flex justify-center items-center flex-col ">
+                <div >
+                    <h1 className="my-5 text-2xl font-bold text-center ">{editMode ? "Edit User" : "Add User"}</h1>
+                </div>
                 <form onSubmit={handleSubmit} className="bg-slate-300 w-1/4 shadow-md rounded px-8 pt-6 pb-8 mb-4" >
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
@@ -57,7 +66,7 @@ const AddEdit = () => {
                     </div> */}
                     <div className="flex items-center justify-between">
                         <button className="bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none  w-full focus:shadow-outline" type="submit">
-                            Add Me
+                            {editMode ? "Update" : "Add"}
                         </button>
                     </div>
                 </form>

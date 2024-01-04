@@ -31,8 +31,16 @@ export const userApi = createApi({
             }),
             invalidatesTags: ["User"],
         }),
+        updateUser: builder.mutation<void, User>({
+            query: ({ id, ...rest }) => ({
+                url: `/crud-rtk/${id}`,
+                method: "PUT",
+                body: rest,
+            }),
+            invalidatesTags: ["User"],
+        }),
 
-    })
-})
+    }),
+});
 
-export const { useGetUsersQuery, useEditUserQuery, useAddUserMutation, useDeleteUserMutation } = userApi;
+export const { useGetUsersQuery, useEditUserQuery, useAddUserMutation, useDeleteUserMutation, useUpdateUserMutation } = userApi;
