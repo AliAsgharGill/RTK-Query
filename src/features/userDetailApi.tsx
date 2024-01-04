@@ -6,18 +6,33 @@ export const userApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'https://65784a9df08799dc8044d036.mockapi.io/',
     }),
+    tagTypes: ["User"],
     endpoints: (builder) => ({
         getUsers: builder.query<User[], void>({
-            query: () => "/crud-rtk"
+            query: () => "/crud-rtk",
+            providesTags: ["User"]
+        }),
+        editUser: builder.query<User, string>({
+            query: (id) => `/crud-rtk/${id}`,
+            providesTags: ["User"]
         }),
         addUser: builder.mutation<void, User>({
             query: (student) => ({
                 url: "/crud-rtk",
                 method: "POST",
                 body: student,
-            })
-        })
+            }),
+            invalidatesTags: ["User"],
+        }),
+        deleteUser: builder.mutation<void, string>({
+            query: (id) => ({
+                url: `/crud-rtk/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["User"],
+        }),
+
     })
 })
 
-export const { useGetUsersQuery, useAddUserMutation } = userApi;
+export const { useGetUsersQuery, useEditUserQuery, useAddUserMutation, useDeleteUserMutation } = userApi;
