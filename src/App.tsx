@@ -4,6 +4,7 @@ import Read from './components/Read'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
 import Header from './components/Header'
+import Create from './components/AddEdit'
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -12,6 +13,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Read />
+      },
+      {
+        path: "/add",
+        element: <Create />
       }
     ]
   },

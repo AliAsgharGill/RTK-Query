@@ -8,9 +8,16 @@ export const userApi = createApi({
     }),
     endpoints: (builder) => ({
         getUsers: builder.query<User[], void>({
-            query: () => "/CRUD"
+            query: () => "/crud-rtk"
         }),
+        addUser: builder.mutation<void, User>({
+            query: (student) => ({
+                url: "/crud-rtk",
+                method: "POST",
+                body: student,
+            })
+        })
     })
 })
 
-export const { useGetUsersQuery } = userApi;
+export const { useGetUsersQuery, useAddUserMutation } = userApi;
